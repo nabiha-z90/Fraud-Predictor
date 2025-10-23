@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>💰 Fraud Prediction App</title>
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+    /* Background & fonts */
+    body {
+        margin: 0;
+        font-family: 'Roboto', sans-serif;
+        background: linear-gradient(to right, #1c92d2, #f2fcfe);
+        overflow-x: hidden;
+        color: #333;
+        height: 100vh;
+    }
+
+    /* Container */
+    .container {
+        max-width: 600px;
+        margin: 50px auto;
+        padding: 30px;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        text-align: center;
+        position: relative;
+        z-index: 2;
+    }
+
+    h1 {
+        color: #0b3d91;
+        margin-bottom: 20px;
+    }
+
+    form input {
+        width: 90%;
+        padding: 10px;
+        margin: 8px 0;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        font-size: 16px;
+    }
+
+    form input[type="submit"] {
+        width: 50%;
+        background: #0b3d91;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background 0.3s ease;
+    }
+
+    form input[type="submit"]:hover {
+        background: #06529c;
+    }
+
+    .result {
+        margin-top: 25px;
+        font-size: 20px;
+        font-weight: bold;
+        padding: 15px;
+        border-radius: 10px;
+        animation: fadeIn 1.5s ease-in-out;
+    }
+
+    .fraud {
+        color: #fff;
+        background-color: #e74c3c;
+    }
+
+    .not-fraud {
+        color: #fff;
+        background-color: #27ae60;
+    }
+
+    /* Floating dollar animation */
+    .dollar {
+        position: absolute;
+        font-size: 24px;
+        color: #f1c40f;
+        animation: floatUp 4s infinite;
+        z-index: 1;
+    }
+
+    @keyframes floatUp {
+        0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+        100% { transform: translateY(-400px) rotate(360deg); opacity: 0; }
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-20px);}
+        to { opacity: 1; transform: translateY(0);}
+    }
+</style>
+
+<script>
+    // Floating $ animation
+    function createDollar() {
+        const dollar = document.createElement('div');
+        dollar.classList.add('dollar');
+        dollar.style.left = Math.random() * window.innerWidth + 'px';
+        dollar.style.fontSize = 16 + Math.random() * 20 + 'px';
+        dollar.innerText = '$';
+        document.body.appendChild(dollar);
+        setTimeout(() => dollar.remove(), 4000);
+    }
+    setInterval(createDollar, 400);
+</script>
+</head>
+<body>
+
+<div class="container">
+    <h1>💸 Fraud Prediction App</h1>
+    <form action="/predictdata" method="post">
+        <input type="number" name="step" placeholder="Step" required><br>
+        <input type="text" name="type" placeholder="Transaction Type" required><br>
+        <input type="number" step="0.01" name="amount" placeholder="Amount" required><br>
+        <input type="text" name="nameOrig" placeholder="Origin Name" required><br>
+        <input type="number" step="0.01" name="oldbalanceOrg" placeholder="Old Balance Origin" required><br>
+        <input type="number" step="0.01" name="newbalanceOrig" placeholder="New Balance Origin" required><br>
+        <input type="text" name="nameDest" placeholder="Destination Name" required><br>
+        <input type="number" step="0.01" name="oldbalanceDest" placeholder="Old Balance Dest" required><br>
+        <input type="number" step="0.01" name="newbalanceDest" placeholder="New Balance Dest" required><br>
+        <input type="submit" value="Predict">
+    </form>
+
+    {% if results is not none %}
+    <div class="result {{ 'fraud' if results == 1 else 'not-fraud' }}">
+        Prediction: {{ 'Fraud 🚨' if results == 1 else 'Not Fraud ✅' }}
+    </div>
+    {% endif %}
+</div>
+
+</body>
+</html>
